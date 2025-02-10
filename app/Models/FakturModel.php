@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\CustomerModel;
+use App\Models\PenjualanModel;
 use App\Models\DetailFakturModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,5 +25,10 @@ class FakturModel extends Model
     public function detail()
     {
         return $this->hasMany(DetailFakturModel::class, 'faktur_id');
+    }
+
+    public function penjualan()
+    {
+        return $this->hasMany(PenjualanModel::class, 'faktur_id');
     }
 }
