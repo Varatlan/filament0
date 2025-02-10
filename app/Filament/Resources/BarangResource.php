@@ -32,13 +32,18 @@ class BarangResource extends Resource
                 TextInput::make('nama_barang')
                     ->required()
                     ->autocomplete(false)
-                    ->placeholder('Name...')
+                    ->placeholder('...')
                     ->label('Name'),
                 TextInput::make('kode_barang')
                     ->required()
                     ->autocomplete(false)
-                    ->placeholder('ID...')
+                    ->placeholder('...')
                     ->label('ID'),
+                TextInput::make('harga')
+                    ->required()
+                    ->autocomplete(false)
+                    ->placeholder('...')
+                    ->label('payment'),
             ]);
     }
 
@@ -56,6 +61,11 @@ class BarangResource extends Resource
                     ->sortable()
                     ->copyable()
                     ->label('ID'),
+                TextColumn::make('harga')
+                    ->searchable()
+                    ->sortable()
+                    ->copyable()
+                    ->label('Payment'),
             ])
             ->filters([
                 //
