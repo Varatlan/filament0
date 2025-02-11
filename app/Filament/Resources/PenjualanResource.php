@@ -2,18 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PenjualanResource\Pages;
-use App\Filament\Resources\PenjualanResource\RelationManagers;
-use App\Models\Penjualan;
-use App\Models\PenjualanModel;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Form;
+use App\Models\Penjualan;
 use Filament\Tables\Table;
+use App\Models\PenjualanModel;
+use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\PenjualanResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\PenjualanResource\RelationManagers;
 
 class PenjualanResource extends Resource
 {
@@ -58,13 +59,31 @@ class PenjualanResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->badge()
+                    ->color(fn(string $state): string
+                    => match ($state) {
+                        '0' => 'danger',
+                        '1' => 'info',
+                    })
+                    ->formatStateUsing(fn(PenjualanModel $record): string
+                    => $record->status == 0 ? 'not payed yet' : 'payed')
                     ->label('Status'),
+            ])
+            ->emptyStateHeading('No data')
+            ->emptyStateDescription('Lets do our best again today')
+            ->emptyStateIcon('heroicon-o-banknotes')
+            ->emptyStateActions([
+                Action::make('create')
+                    ->label('Make Transaction')
+                    ->url(route('filament.admin.resources.fakturs.create'))
+                    ->icon('heroicon-m-plus')
+                    ->button(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                // Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -85,7 +104,7 @@ class PenjualanResource extends Resource
         return [
             'index' => Pages\ListPenjualans::route('/'),
             'create' => Pages\CreatePenjualan::route('/create'),
-            // 'edit' => Pages\EditPenjualan::route('/{record}/edit'),
+            'edit' => Pages\EditPenjualan::route('/{record}/edit'),
         ];
     }
 }
